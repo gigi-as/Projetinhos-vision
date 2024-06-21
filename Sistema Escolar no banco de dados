@@ -1,0 +1,14 @@
+create database Cursos_Cia;
+use Cursos_Cia;
+
+create table aluno(
+id_aluno int auto_increment not null primary key,
+nome varchar (100) not null,
+contato varchar (20) not null
+);
+
+create table curso (
+id_curso int auto_increment not null primary key,
+nome varchar (75) not null,
+carga_horaria varchar (15) not null
+);
