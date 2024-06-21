@@ -1,0 +1,70 @@
+import mysql.connector #importanto a biblioteca
+
+class Cliente: #Definindo a classe cliente 
+    def __init__(self, nome, cpf, contato, email): #criando um metodo e ta se refirindo a ele mesmo e passando como parâmetros os atributos que podem ser acessados
+        # criando variaveis dentro do proprio metodo e esta recebendo como atributo o parâmentro
+        self.nome = nome 
+        self.cpf = cpf
+        self.contato = contato
+        self.email = email
+
+class SistemasDeRegistros: #Definindo a classe SisteEcommerce para gerenciar o sistema
+    def __init__(self):
+         # Estabelece a conexão com o banco de dados MySQL
+        self.conexao = mysql.connector.connect(
+            host="localhost",
+            user="root",
+            password="he182555@",
+            database="crm"
+        )
+         # Cria um cursor para executar comandos SQL no banco de dados
+        self.cursor = self.conexao.cursor()
+
+    def registrar_cliente(self, cliente):  # Método para adicionar um novo registro ao banco de dados
+        sql = "INSERT INTO cliente (nome, cpf,contato, email) VALUES (%s, %s, %s,%s)" # Prepara o comando SQL para inserir um novo registro na tabela 'cliente'
+        valores = (cliente.nome, cliente.cpf, cliente.contato,cliente.email)
+        self.cursor.execute(sql, valores) # Executa o comando SQL
+        self.conexao.commit() # Confirma novamente a transação no banco de dados
+        print(f"Cliente {cliente.nome} registrado com sucesso!") #imprime a mensagem que foi registrado com sucesso
+
+    def dados_clientes(self): # Método para adicionar os dados dos clientes ao banco de dados
+        self.cursor.execute("SELECT nome, cpf, email FROM cliente") #usando comeando  sql para selecionar as linhas na minha tabela cliente
+        clientes = self.cursor.fetchall() #obtendo uma consulta no banco de dados 
+        print("Lista de Clientes:") #imprimindo a lista dos clientes
+        for cliente in clientes:
+            print(f"Nome: {cliente[0]}, CPF: {cliente[1]}, Email: {cliente[2]}") #aqui vai buscar as informações e acrescentar em cada espaço
+        print("Listagem de clientes concluída.\n") #imprimindo que a lista foi concluida!
+
+    def fechar_conexao(self): # Método criado para fechar a conexão com op bando de dados.
+        self.cursor.close()
+        self.conexao.close()
+
+# Instância do sistema de registros
+sistema = SistemasDeRegistros()
+
+while True:  # Método principal que exibe o menu do sistema e permite a interação com o usuário, ai a opção que ele escolher vai ser exibida para ele.
+    print('Menu:')
+    print("1. Registrar novo cliente")
+    print("2. Ver clientes registrados")
+    print("3. Sair")
+
+    opcao = input("Escolha uma opção: ")
+
+    if opcao == '1': #Aqui ele vai acrescentar os dados pedido 
+        nome_cliente = input("Digite o nome do cliente: ")
+        cpf_cliente = input("Digite o CPF do cliente: ")
+        email_cliente = input("Digite o email do cliente: ")
+        contato_cliente = input("Digite o contato do cliente:")
+        cliente_registrado = Cliente(nome_cliente, cpf_cliente, contato_cliente,email_cliente)
+        sistema.registrar_cliente(cliente_registrado)
+
+    elif opcao == '2':
+        sistema.dados_clientes() #Aqui mostrará os registros dos clientes
+
+    elif opcao == '3': #Aqui o usuario vai escolher a opção para fechar o sistema e aparecer a mensagem após ela ser selecionada
+        print("Encerrando o programa...")
+        sistema.fechar_conexao() 
+        break
+
+    else:
+        print("Opção inválida. Tente novamente.")
