@@ -1,0 +1,76 @@
+import mysql.connector
+
+class Aluno: #criando uma classe 
+     def __init__(self,nome,contato):
+        self.nome=nome
+        self.contato=contato
+
+class Curso :#criando outra classe
+     def __init__(self,nome,carga_horaria):
+         self.nome=nome
+         self.carga_horaria=carga_horaria
+        
+class SistemaCursinho:
+     def __init__(self):
+        # Estabelece a conexão com o banco de dados MySQL
+        self.conexao = mysql.connector.connect(
+            host='localhost',
+            user='root',
+            password='he182555@',
+            database='Cursos_Cia'
+        )
+          # Cria um cursor para executar comandos SQL no banco de dados
+        self.cursor = self.conexao.cursor()
+ 
+    
+     def adicionar_aluno(self): #criando um metodo e usando ele mesmo
+         # Solicita o nome e o contato do aluno ao usuário
+        nome=input('Digite o nome completo do aluno:')
+        contato=input('Digite o contato do aluno:')
+
+       # Prepara o comando SQL para inserir um novo aluno na tabela 'aluno'
+        sql= 'INSERT INTO aluno (nome,contato) VALUES (%s,%s)'
+        val= (nome,contato)
+        self.cursor.execute(sql,val)  # Executa o comando SQL
+        self.conexao.commit()  # Confirma a transação no banco de dados
+       
+
+     def adicionar_curso(self,):
+         
+         # Solicita o nome e a carga horária do curso ao usuário novamente
+         nome=input('Digite o nome do curso:')
+         carga_horaria=input('Digite a carga horária do curso:')
+
+         # Preparando o comando SQL para inserir um novo curso na tabela 'curso'
+         sql= 'INSERT INTO curso (nome,carga_horaria) VALUES (%s,%s)'
+         val= (nome,carga_horaria)
+         self.cursor.execute(sql,val)  # Executa o comando SQL
+         self.conexao.commit() # Confirma novamente a transação no banco de dados
+         
+
+     def Matricula(self,):
+       # Aqui ele esta fazendo  uma consulta SQL para obter todas as matrículas de alunos em cursos
+      self.cursor.execute('SELECT aluno.nome, aluno.contato, curso.nome, curso.carga_horaria FROM aluno, curso')
+      matriculas = self.cursor.fetchall()  # Obtém todos os resultados da consulta
+      for matricula in matriculas:
+        print(f'Nome: {matricula[0]}, contato: {matricula[1]}, Curso: {matricula[2]}, Carga Horária: {matricula[3]}')
+        print('Matrícula Concluída.') # Imprime uma mensagem indicando que a matrícula foi concluída
+
+     def fechar_conexao(self):
+       self.cursor.close()
+       self.conexao.close()
+ 
+    
+# Cria uma instância da classe SistemaCursinho, estabelecendo conexão com o banco de dados
+sistema= SistemaCursinho() 
+
+#adicionar aluno
+
+sistema.adicionar_aluno()
+sistema.adicionar_curso()
+
+#matricular aluno no curso
+
+print('Lista de matriculas:')
+sistema.Matricula()
+sistema.fechar_conexao()
