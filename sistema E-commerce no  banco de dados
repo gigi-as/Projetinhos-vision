@@ -1,0 +1,23 @@
+create database e_commerce;
+use e_commerce;
+
+create table produtos(
+id int auto_increment not null primary key,
+nome varchar (200) not null,
+preco varchar (200) not null,
+descricao varchar (200) not null
+);
+create table cliente(
+id_cliente int auto_increment not null primary key,
+nome varchar (255) not null,
+email varchar (255) not null,
+contato varchar (20) not null 
+);
+
+create table pedidos(
+id int auto_increment not null primary key,
+id_cliente int not null,
+id_produto int not null,
+foreign key (id_cliente) references cliente (id_cliente),
+foreign key (id_produto) references produtos (id)
+);
