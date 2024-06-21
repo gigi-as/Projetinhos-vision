@@ -1,0 +1,9 @@
+create database crm;
+use crm;
+
+ create table cliente(
+ id int auto_increment not null primary key,
+ nome varchar (200) not null,
+ cpf varchar (20) not null,
+ contato varchar (20) not null,
+ email  varchar (50) not null );
